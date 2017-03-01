@@ -3,7 +3,10 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	public Vector2 velocityIndicator;
+	private const float SPEED_MODIFIER = 10;
+
+	public Vector2 rotation;
+	public float angle;
 
 	private Rigidbody2D rb2d;
 
@@ -14,13 +17,26 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		// update velocity
-		velocityIndicator = rb2d.velocity;
+		ManageMovement ();
+		ManageRotation ();
+	}
 
-		// apply input force
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
-		Vector2 inputMovement = new Vector2 (moveHorizontal, moveVertical);
-		rb2d.AddForce (inputMovement*5);
+	void ManageMovement()
+	{
+		float moveHorizontal = Input.GetAxis ("H_Movement");
+		float moveVertical = Input.GetAxis ("V_Movement");
+		Vector2 inputMovement = new Vector2 (moveHorizontal * SPEED_MODIFIER, moveVertical * SPEED_MODIFIER);
+		rb2d.velocity = inputMovement;
+	}
+
+	void ManageRotation ()
+	{
+		rotation = new Vector2(Input.GetAxis ("H_Rotation"), Input.GetAxis("V_Rotation"));
+		if (rotation.magnitude > .3f)
+		{
+			Vector2 vAux = rotation - Vector2.zero;
+			angle = Mathf.Atan2(vAux.y, vAux.x)*Mathf.Rad2Deg;
+			rb2d.MoveRotation (angle);
+		}
 	}
 }
