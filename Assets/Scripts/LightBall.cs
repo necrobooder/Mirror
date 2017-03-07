@@ -3,17 +3,17 @@ using System.Collections;
 
 public class LightBall : MonoBehaviour {
 
-	public Direction direction;
-	public int speed;
-
-	public Vector2 velocity;
+	// members
+	private Direction direction;
+	private int speed;
 	private Rigidbody2D rb2d;
+
+	// variables
+	public Vector2 velocity;
 
 	void Start () {
 		// Get the rigid body component
 		rb2d = GetComponent<Rigidbody2D> ();
-		if (!rb2d)
-			print ("no rigidbody found");
 	}
 
 	public void SetUp(Direction direction, int speed)
@@ -37,18 +37,15 @@ public class LightBall : MonoBehaviour {
 		default:
 			break;
 		}
-
-		if (!rb2d)
-			print ("none found");
-		else
-			rb2d.velocity = velocity;
 	}
 
 	void FixedUpdate()
 	{
-		if (!rb2d)
-			print ("none found");
-		else
 			rb2d.velocity = velocity;
+	}
+
+	void OnPadImpact(PadCollidedWithLightBallMessage msg)
+	{
+		print ("hey");
 	}
 }
