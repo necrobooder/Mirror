@@ -46,6 +46,15 @@ public class LightBall : MonoBehaviour {
 
 	void OnPadImpact(PadCollidedWithLightBallMessage msg)
 	{
-		print ("hey");
+		switch (msg.impact) {
+		case Impact.weak:
+			velocity = new Vector2 (msg.direction.normalized.x * -2f, msg.direction.normalized.y * -2f);
+			break;
+		case Impact.strong:
+			velocity = new Vector2 (msg.direction.normalized.x * -35f, msg.direction.normalized.y * -35f);
+			break;
+		default:
+			break;
+		}
 	}
 }
