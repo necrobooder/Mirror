@@ -3,17 +3,19 @@ using System.Collections;
 
 public class LightBallSpawner : MonoBehaviour {
 
+	private const float MIN_SPEED = 5f;
+	private const float MAX_SPEED = 12f;
 	private const float RANGE = 16f;
 	private const float SPAWN_DISTANCE = 42f;
+	private const float SPAWN_TIMER = 5f;
 
-	public float spawnTimer;
 	public LightBall objectToSpawn;
 
 	private float counter;
 
 	void Start()
 	{
-		counter = spawnTimer;
+		counter = SPAWN_TIMER;
 	}
 
 	void Update () {
@@ -25,7 +27,7 @@ public class LightBallSpawner : MonoBehaviour {
 		counter -= Time.deltaTime;
 		if (counter < 0) 
 		{
-			counter = spawnTimer;
+			counter = SPAWN_TIMER;
 			SpawnObject ();
 		}
 	}
@@ -35,7 +37,8 @@ public class LightBallSpawner : MonoBehaviour {
 		// Declare construction parameters
 		Direction direction;
 		Vector2 spawnPosition = new Vector2 ();
-		int speed = (int)(Random.value * 15f + 1);
+		Color color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f, 1f, 1f);
+		int speed = (int)(Random.value * (MAX_SPEED - MIN_SPEED) + MIN_SPEED);
 
 		// used variables
 		float directionRandomizer = Random.value;
@@ -46,11 +49,11 @@ public class LightBallSpawner : MonoBehaviour {
 			direction = Direction.north;
 			spawnPosition.Set (spawnRandomizer, -SPAWN_DISTANCE);
 		}
-		if (directionRandomizer < .5f) {
+		else if (directionRandomizer < .5f) {
 			direction = Direction.south;
 			spawnPosition.Set (spawnRandomizer, SPAWN_DISTANCE);
 		}
-		if (directionRandomizer < .75f){
+		else if (directionRandomizer < .75f){
 			direction = Direction.east;
 			spawnPosition.Set (-SPAWN_DISTANCE, spawnRandomizer);
 		}
@@ -63,6 +66,6 @@ public class LightBallSpawner : MonoBehaviour {
 		LightBall lightball = Instantiate (objectToSpawn, spawnPosition, Quaternion.identity) as LightBall;
 
 		// Set params
-		lightball.SetUp(direction, speed);
+		lightball.SetUp(direction, speed, color);
 	}
 }

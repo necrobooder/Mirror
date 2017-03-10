@@ -15,4 +15,8 @@ public class Strings{
 	public static string TAG_PLAYER = "Player";
 	public static string TAG_PAD = "PAD";
 	public static string TAG_LIGHTBALL = "LightBall";
+	public static string TAG_WALL = "Wall";
+
+	// LAYERS
+	public static string LAYER_LIGHTBALL = "LightBall";
 }

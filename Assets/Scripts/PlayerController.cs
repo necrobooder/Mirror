@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	private const float SPEED_MODIFIER = 10;
+	private static float speed = 12f;
 
 	private Vector2 direction;
 	private Impact impact;
@@ -14,8 +14,8 @@ public class PlayerController : MonoBehaviour {
 	void Start()
 	{
 		rb2d = GetComponent<Rigidbody2D> ();
-
 		colorChanger = this.transform.Find ("pad").GetComponent<ColorChanger> ();
+		direction = Vector2.right;
 	}
 
 	void FixedUpdate()
@@ -29,17 +29,17 @@ public class PlayerController : MonoBehaviour {
 	{
 		float moveHorizontal = Input.GetAxis (Strings.HORIZONTAL_MOVEMENT);
 		float moveVertical = Input.GetAxis (Strings.VERTICAL_MOVEMENT);
-		Vector2 inputMovement = new Vector2 (moveHorizontal * SPEED_MODIFIER, moveVertical * SPEED_MODIFIER);
+		Vector2 inputMovement = new Vector2 (moveHorizontal * speed, moveVertical * speed);
 		rb2d.velocity = inputMovement;
 	}
 
 	void ManageRotation ()
 	{
-		direction = new Vector2(Input.GetAxis (Strings.HORIZONTAL_ROTATION), Input.GetAxis(Strings.VERTICAL_ROTATION));
-		if (direction.magnitude > .3f)
+		Vector2 rotationAxisValue = new Vector2(Input.GetAxis (Strings.HORIZONTAL_ROTATION), Input.GetAxis(Strings.VERTICAL_ROTATION));
+		if (rotationAxisValue.magnitude > .5f)
 		{
-			Vector2 vAux = direction - Vector2.zero;
-			float angle = Mathf.Atan2(vAux.y, vAux.x)*Mathf.Rad2Deg;
+			direction = rotationAxisValue;
+			float angle = Mathf.Atan2(direction.y, direction.x)*Mathf.Rad2Deg;
 			rb2d.MoveRotation (angle);
 		}
 	}
@@ -61,16 +61,12 @@ public class PlayerController : MonoBehaviour {
 			impact = Impact.standar;
 	}
 
-	void OnTriggerEnter2D (Collider2D col)
+	public PadImpactMessage GetPadInfo()
 	{
-		if (col.gameObject.CompareTag (Strings.TAG_LIGHTBALL))
-		{
-			//Destroy (col.gameObject);
-		}
+		return new PadImpactMessage (direction, impact);
 	}
 
-	public PadCollidedWithLightBallMessage GetPadInfo()
-	{
-		return new PadCollidedWithLightBallMessage (direction, impact);
+	public static float Speed {
+		get{ return speed; }
 	}
 }
